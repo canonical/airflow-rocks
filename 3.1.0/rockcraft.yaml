@@ -8,8 +8,6 @@ description: |
 base: ubuntu@24.04
 build-base: ubuntu@24.04
 
-# You don't actually need deadsnakes for 3.12 on Ubuntu 24.04,
-# but I'll leave your block intact since you included it.
 package-repositories:
   - type: apt
     ppa: deadsnakes/ppa
