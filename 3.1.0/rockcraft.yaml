@@ -1,0 +1,52 @@
+name: airflow-rock
+version: "3.1.0"
+summary: Apache Airflow Rock
+description: |
+  Builds Apache Airflow 3.1.0 from source on Ubuntu 24.04 (Python 3.12), no extras.
+  Suitable for `airflow standalone`.
+
+base: ubuntu@24.04
+build-base: ubuntu@24.04
+
+package-repositories:
+  - type: apt
+    ppa: deadsnakes/ppa
+    priority: always
+
+platforms:
+  amd64:
+
+services:
+  airflow:
+    override: replace
+    startup: enabled
+    command: /bin/airflow standalone
+    environment:
+      AIRFLOW_HOME: /var/lib/airflow
+      PYTHONPATH: /lib/python3.12/site-packages
+      PATH: /bin:/usr/bin:/usr/local/bin
+
+parts:
+  airflow:
+    plugin: python
+    source: https://github.com/apache/airflow
+    source-type: git
+    source-tag: 3.1.0
+    python-constraints:
+      - https://raw.githubusercontent.com/apache/airflow/constraints-3.1.0/constraints-3.12.txt
+    python-requirements:
+      - ../../../project/req.txt
+    stage-packages:
+      - python3.12
+      - python3.12-venv
+      - libssl3
+      - libffi8
+    build-packages:
+      - python3.12-venv
+      - python3.12-dev
+      - gcc
+      - libssl-dev
+      - libffi-dev
+    build-environment:
+      - PARTS_PYTHON_INTERPRETER: python3.12
+
