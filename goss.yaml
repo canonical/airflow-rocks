@@ -1,0 +1,21 @@
+command:
+  "airflow version":
+    exit-status: 0
+    stdout:
+      - "3.1.0"
+  "pebble services":
+    exit-status: 0
+    stdout:
+      - "airflow"
+      - "active"
+file:
+  /var/lib/airflow/airflow.db:
+    exists: true
+    filetype: file
+port:
+  tcp:8080:
+    listening: true
+process:
+  pebble:
+    running: true
+    
