@@ -1,0 +1,82 @@
+name: airflow-rock
+version: "3.1.0"
+summary: Apache Airflow Rock
+description: |
+  Builds Apache Airflow 3.1.0 from source on Ubuntu 24.04 (Python 3.12), no extras.
+  Suitable for `airflow standalone`.
+
+base: ubuntu@24.04
+build-base: ubuntu@24.04
+
+package-repositories:
+  - type: apt
+    ppa: deadsnakes/ppa
+    # priority: always
+
+platforms:
+  amd64:
+
+services:
+  airflow:
+    override: replace
+    startup: enabled
+    command: /bin/airflow standalone
+    environment:
+      AIRFLOW_HOME: /var/lib/airflow
+      PYTHONPATH: /lib/python3.12/site-packages
+      # PATH: /bin:/usr/bin:/usr/local/bin
+
+parts:
+  airflow:
+    plugin: python
+    source: https://github.com/apache/airflow
+    source-type: git
+    source-tag: 3.1.0
+    # python-constraints:
+    #   - https://raw.githubusercontent.com/apache/airflow/constraints-3.1.0/constraints-3.12.txt # why its needed
+    # python-requirements:
+    #   - ../../../project/req.txt ## explain why its needed
+    stage-packages:
+      # - vim
+      - python3.12-venv
+      - libssl3
+      - libffi8
+      # - bash
+    build-packages:
+      - python3.12-venv
+      - python3.12-dev
+      - gcc
+      - libssl-dev
+      - libffi-dev
+    build-environment:
+      - PARTS_PYTHON_INTERPRETER: python3.12
+    # override-build: |
+    #   set -eux
+    #   craftctl default
+    #   # ensure the bridge exists from install → stage → prime
+    #   install -d "$CRAFT_PART_INSTALL/usr/lib/python3/dist-packages"
+    #   echo "/lib/python3.12/site-packages" > \
+    #     "$CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/airflow.pth"
+    
+    # override-stage: |
+    #   set -eux
+    #   craftctl default
+    #   install -Dm755 "$CRAFT_PART_INSTALL/bin/airflow" "$CRAFT_STAGE/bin/airflow"
+
+    #   # Bridge /lib/python3.12/site-packages into the system interpreter's sys.path
+    #   mkdir -p "$CRAFT_STAGE/usr/local/lib/python3.12/dist-packages"
+    #   echo "/lib/python3.12/site-packages" > \
+    #     "$CRAFT_STAGE/usr/local/lib/python3.12/dist-packages/airflow.pth"
+
+    # override-prime: |
+    #   set -eux
+    #   craftctl default
+    #   # install -Dm755 "$CRAFT_STAGE/bin/airflow" "$CRAFT_PRIME/bin/airflow"
+    #   if [ -f "$CRAFT_PRIME/bin/airflow" ]; then
+    #     sed -i '1 s|.*|#!/usr/bin/python3.12|' "$CRAFT_PRIME/bin/airflow"
+    #   fi
+    #   mkdir -p "$CRAFT_PRIME/usr/lib/python3.12/dist-packages"
+    #   echo "/lib/python3.12/site-packages" > \
+    #     "$CRAFT_PRIME/usr/lib/python3.12/dist-packages/airflow.pth"
+      
+    #   mkdir -p "$CRAFT_PRIME/var/lib/airflow"
