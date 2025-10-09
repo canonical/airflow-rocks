@@ -45,6 +45,12 @@ file:
   /var/lib/airflow/logs:
     exists: true
     filetype: directory
+  /licenses/LICENSE-airflow:
+    exists: true
+    mode: "0644"
+  /licenses/LICENSE-airflow-rock:
+    exists: true
+    mode: "0644"
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":

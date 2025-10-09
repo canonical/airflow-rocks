@@ -1,5 +1,3 @@
-# this justfile contains additional checks for skopeo, jq in the environment, these shall be removed before merging into main.
-
 set export
 set fallback
 
@@ -9,20 +7,21 @@ default:
 	just --list
 
 [private]
+start-local-registry:
+	docker run -d -p 5000:5000 --name registry registry:2
+
+[private]
+stop-local-registry:
+	docker stop registry && docker rm registry
+
+[private]
 push-to-local-registry version:
 	#!/usr/bin/env bash
 	set -euo pipefail
 
-	REGISTRY_HOST="localhost:32000"            # MicroK8s registry
-	ROCK="{{version}}/airflow-rock_{{version}}_amd64.rock"
-
-	SKOPEO="$(command -v rockcraft.skopeo || command -v skopeo)"
-	[ -n "${SKOPEO}" ] || { echo "skopeo not found"; exit 1; }
-
-	echo "Pushing ${ROCK} → docker://${REGISTRY_HOST}/airflow-rock-dev:{{version}}"
-	"${SKOPEO}" --insecure-policy copy --dest-tls-verify=false \
-	  "oci-archive:${ROCK}" \
-	  "docker://${REGISTRY_HOST}/airflow-rock-dev:{{version}}"
+	rockcraft.skopeo --insecure-policy copy --dest-tls-verify=false \
+	  "oci-archive:{{version}}/airflow-rock_{{version}}_amd64.rock" \
+	  "docker://localhost:5000/airflow-rock-dev:{{version}}"
 
 pack version debug="":
 	cd "{{version}}" && rockcraft pack {{debug}}
@@ -31,45 +30,24 @@ clean version:
 	cd "{{version}}" && rockcraft clean
 	cd "{{version}}" && rm -f *.rock
 
-run version: (pack version) (push-to-local-registry version)
+run version: (pack version) (start-local-registry) (push-to-local-registry version)
 	#!/usr/bin/env bash
 	set -euo pipefail
+	trap 'just stop-local-registry' EXIT
 
-	REGISTRY_HOST="localhost:32000"
-	IMG="airflow-rock-dev:{{version}}"
+	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:{{version}}" | jq -r .Digest)"
+	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
 
-	SKOPEO="$(command -v rockcraft.skopeo || command -v skopeo)"
-	[ -n "${SKOPEO}" ] || { echo "skopeo not found"; exit 1; }
-	command -v jq >/dev/null || { echo "jq not found"; exit 1; }
-
-	DIGEST="$("${SKOPEO}" --insecure-policy inspect --tls-verify=false "docker://${REGISTRY_HOST}/${IMG}" | jq -r .Digest)"
-	[ -n "$DIGEST" ] || { echo "Failed to resolve digest"; exit 1; }
-	IMAGE_REF="${REGISTRY_HOST}/airflow-rock-dev@${DIGEST}"
-
-	KUBECTL_BIN="$(command -v kubectl || command -v microk8s.kubectl)"
-	[ -n "${KUBECTL_BIN}" ] || { echo "kubectl not found"; exit 1; }
-
-	env GOSS_KUBECTL_BIN="${KUBECTL_BIN}" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
+	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
 	kgoss edit -i "${IMAGE_REF}"   -e AIRFLOW__CORE__LOAD_EXAMPLES=false
 
-test version: (pack version) (push-to-local-registry version)
+test version: (pack version) (start-local-registry) (push-to-local-registry version) 
 	#!/usr/bin/env bash
 	set -euo pipefail
+	trap 'just stop-local-registry' EXIT
 
-	REGISTRY_HOST="localhost:32000"
-	IMG_NAME="airflow-rock-dev"
-	VER="{{version}}"
+	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:{{version}}" | jq -r .Digest)"
+	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
 
-	SKOPEO="$(command -v rockcraft.skopeo || command -v skopeo)"
-	[ -n "$SKOPEO" ] || { echo "skopeo not found"; exit 1; }
-	command -v jq >/dev/null || { echo "jq not found"; exit 1; }
-
-	DIGEST="$("$SKOPEO" --insecure-policy inspect --tls-verify=false "docker://${REGISTRY_HOST}/${IMG_NAME}:${VER}" | jq -r .Digest)"
-	[ -n "$DIGEST" ] || { echo "Failed to resolve digest"; exit 1; }
-	IMAGE_REF="${REGISTRY_HOST}/${IMG_NAME}@${DIGEST}"
-
-	KUBECTL_BIN="$(command -v kubectl || command -v microk8s.kubectl)"
-	[ -n "${KUBECTL_BIN}" ] || { echo "kubectl not found"; exit 1; }
-
-	env GOSS_KUBECTL_BIN="${KUBECTL_BIN}" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
-	kgoss run -i "${IMAGE_REF}"   -e AIRFLOW__CORE__LOAD_EXAMPLES=false
+	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
+	kgoss run -i "${IMAGE_REF}"   -e AIRFLOW__CORE__LOAD_EXAMPLES=true
