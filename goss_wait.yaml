@@ -1,14 +1,11 @@
 port:
   tcp:8080:
     listening: true
-
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
     status: 200
     timeout: 5000
     allow-insecure: true
-
 file:
   /var/lib/airflow/airflow.db:
     exists: true
-
