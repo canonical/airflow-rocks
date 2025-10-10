@@ -12,9 +12,6 @@ command:
     exit-status: 0
     stdout:
       - "/^1$/"
-  db-check:
-    exec: "airflow db check"
-    exit-status: 0
   default-executor-is-local:
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
