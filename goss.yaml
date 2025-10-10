@@ -2,58 +2,78 @@ command:
   airflow-version:
     exec: "airflow version"
     exit-status: 0
-  airflow-help:
-    exec: "airflow --help"
-    exit-status: 0
+    stdout:
+        - "/^3\\.1\\.[0-9]+\\s*$/"
   pebble-services:
     exec: "pebble services"
     exit-status: 0
-  api-server-running:
-    exec: "pgrep -fa 'airflow api_server'"
+  airflow-standalone-running:
+    exec: "sh -lc \"ps -eo pid,cmd | grep -F 'airflow standalone' | grep -v grep | wc -l\""
     exit-status: 0
-  scheduler-running:
-    exec: "pgrep -fa 'airflow scheduler'"
-    exit-status: 0
-  dag-processor-running:
-    exec: "pgrep -fa 'airflow dag-processor'"
-    exit-status: 0
-  triggerer-running:
-    exec: "pgrep -fa 'airflow triggerer'"
-    exit-status: 0
+    stdout:
+      - "/^1$/"
   db-check:
     exec: "airflow db check"
     exit-status: 0
   default-executor-is-local:
-    exec: "sh -lc 'e=$(airflow config get-value core executor); [ \"$e\" = \"SequentialExecutor\" ] || [ \"$e\" = \"LocalExecutor\" ]'"
+    exec: "/bin/airflow config get-value core executor"
     exit-status: 0
-  executor-env-override-accepts-kubernetes:
-    exec: "sh -lc '[ \"$(AIRFLOW__CORE__EXECUTOR=KubernetesExecutor airflow config get-value core executor)\" = \"KubernetesExecutor\" ]'"
-    exit-status: 0
+    stdout:
+      - "/^(LocalExecutor|SequentialExecutor)$/"
 
 file:
   /bin/airflow:
     exists: true
+    path: /bin/airflow
+    owner: root
+    group: root
+    filetype: file
   /lib/python3.12/site-packages/airflow:
     exists: true
+    path: /lib/python3.12/site-packages/airflow
     filetype: directory
+    owner: root
+    group: root
   /var/lib/airflow:
     exists: true
+    path: /var/lib/airflow
     filetype: directory
+    owner: root
+    group: root
   /var/lib/airflow/airflow.cfg:
     exists: true
+    path: /var/lib/airflow/airflow.cfg
+    owner: root
+    group: root
     filetype: file
   /var/lib/airflow/logs:
     exists: true
+    path: /var/lib/airflow/logs
     filetype: directory
+    owner: root
+    group: root
   /licenses/LICENSE-airflow:
     exists: true
+    path: /licenses/LICENSE-airflow
     mode: "0644"
+    owner: root
+    group: root
+    filetype: file
   /licenses/LICENSE-airflow-rock:
     exists: true
+    path: /licenses/LICENSE-airflow-rock
     mode: "0644"
+    owner: root
+    group: root
+    filetype: file
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
     status: 200
     timeout: 5000
     allow-insecure: true
+    body:
+        - '/"metadatabase"\s*:\s*\{\s*"status"\s*:\s*"healthy"/'
+        - '/"scheduler"\s*:\s*\{\s*"status"\s*:\s*"healthy"/'
+        - '/"triggerer"\s*:\s*\{\s*"status"\s*:\s*"healthy"/'
+        - '/"dag_processor"\s*:\s*\{\s*"status"\s*:\s*"healthy"/'

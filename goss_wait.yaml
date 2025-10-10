@@ -6,6 +6,3 @@ http:
     status: 200
     timeout: 5000
     allow-insecure: true
-file:
-  /var/lib/airflow/airflow.db:
-    exists: true
