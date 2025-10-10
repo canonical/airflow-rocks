@@ -2,11 +2,7 @@ name: airflow-rock
 version: "3.1.0"
 summary: Apache Airflow Rock
 description: |
-<<<<<<< HEAD
   Builds Apache Airflow 3.1.0 from source on Ubuntu 24.04 (Python 3.12).
-=======
-  Builds Apache Airflow 3.1.0 from source on Ubuntu 24.04 (Python 3.12), no extras.
->>>>>>> 66af0f5 (feat: added parts for licences, corrected pebble entrypoint)
 
 base: ubuntu@24.04
 build-base: ubuntu@24.04
