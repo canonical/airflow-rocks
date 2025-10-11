@@ -30,9 +30,6 @@ pack VERSION DEBUG="":
 	cd "${VERSION}" && rockcraft pack ${DEBUG}
 
 clean VERSION:
-	#!/usr/bin/env bash
-	set -euxo pipefail
-	
 	cd "${VERSION}" && rockcraft clean
 	cd "${VERSION}" && rm -f *.rock
 
