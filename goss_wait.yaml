@@ -1,0 +1,8 @@
+port:
+  tcp:8080:
+    listening: true
+process:
+  pebble:
+    running: true
+  airflow:
+    running: true
