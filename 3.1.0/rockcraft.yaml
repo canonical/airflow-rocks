@@ -56,3 +56,4 @@ parts:
       LICENSE: licenses/LICENSE-airflow-rock
     stage:
       - licenses/LICENSE-airflow-rock
+      
