@@ -11,7 +11,7 @@ command:
     exec: "sh -lc \"ps -eo pid,cmd | grep -F 'airflow standalone' | grep -v grep | wc -l\""
     exit-status: 0
     stdout:
-      - "/^1$/"
+      - 1
   default-executor-is-local:
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
@@ -25,30 +25,35 @@ file:
     owner: root
     group: root
     filetype: file
+    mode: "0755"
   /lib/python3.12/site-packages/airflow:
     exists: true
     path: /lib/python3.12/site-packages/airflow
     filetype: directory
     owner: root
     group: root
+    mode: "0755"
   /var/lib/airflow:
     exists: true
     path: /var/lib/airflow
     filetype: directory
     owner: root
     group: root
+    mode: "0755"
   /var/lib/airflow/airflow.cfg:
     exists: true
     path: /var/lib/airflow/airflow.cfg
     owner: root
     group: root
     filetype: file
+    mode: "0644"
   /var/lib/airflow/logs:
     exists: true
     path: /var/lib/airflow/logs
     filetype: directory
     owner: root
     group: root
+    mode: "0755"
   /licenses/LICENSE-airflow:
     exists: true
     path: /licenses/LICENSE-airflow
