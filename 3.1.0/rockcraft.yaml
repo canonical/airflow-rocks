@@ -29,8 +29,46 @@ parts:
     source: https://github.com/apache/airflow
     source-type: git
     source-tag: 3.1.0
+    build-packages:
+      - build-essential
+      - pkg-config
+      - libmariadb-dev
+      - unixodbc-dev
     stage-packages:
       - python3-venv
+      - libmariadb3
+      - unixodbc
+    python-constraints: [https://raw.githubusercontent.com/apache/airflow/constraints-3.1.0/constraints-3.12.txt]
+    python-packages:
+      - apache-airflow-providers-amazon
+      - apache-airflow-providers-celery
+      - apache-airflow-providers-cncf-kubernetes
+      - apache-airflow-providers-common-compat
+      - apache-airflow-providers-common-io
+      - apache-airflow-providers-common-sql
+      - apache-airflow-providers-docker
+      - apache-airflow-providers-elasticsearch
+      - apache-airflow-providers-fab
+      - apache-airflow-providers-ftp
+      - apache-airflow-providers-google
+      - apache-airflow-providers-grpc
+      - apache-airflow-providers-hashicorp
+      - apache-airflow-providers-http
+      - apache-airflow-providers-imap
+      - apache-airflow-providers-microsoft-azure
+      - apache-airflow-providers-mysql
+      - apache-airflow-providers-odbc
+      - apache-airflow-providers-openlineage
+      - apache-airflow-providers-postgres
+      - apache-airflow-providers-redis
+      - apache-airflow-providers-sendgrid
+      - apache-airflow-providers-snowflake
+      - apache-airflow-providers-sqlite
+      - apache-airflow-providers-ssh
+      - apache-airflow-providers-standard
+      - apache-airflow-providers-slack
+      - apache-airflow-providers-smtp
+      - apache-airflow-providers-sftp
   airflow-license:
     plugin: dump
     source: https://github.com/apache/airflow
@@ -59,3 +97,4 @@ parts:
       set -x
       mkdir -p $CRAFT_PRIME/usr/share/rocks/
       (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query --admindir=$CRAFT_PRIME/var/lib/dpkg/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > $CRAFT_PRIME/usr/share/rocks/dpkg.query
+
