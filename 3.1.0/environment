@@ -1,2 +1,0 @@
-AIRFLOW_HOME=/var/lib/airflow
-PYTHONPATH="/usr/lib/python3:$PYTHONPATH"
