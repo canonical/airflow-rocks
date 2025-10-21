@@ -6,19 +6,17 @@ description: |
 
 base: ubuntu@24.04
 build-base: ubuntu@24.04
-
-package-repositories:
-  - type: apt
-    ppa: deadsnakes/ppa
-
 platforms:
   amd64:
+environment:
+  AIRFLOW_HOME: /var/lib/airflow
+  PYTHONPATH: /usr/lib/python3
 
 services:
   airflow:
     override: replace
     startup: enabled
-    command: /bin/bash -lc 'exec /usr/bin/airflow standalone'
+    command: /usr/bin/airflow standalone
 
 checks:
   airflow-running:
@@ -34,8 +32,6 @@ parts:
     source-tag: 3.1.0
     stage-packages:
       - python3.12-venv
-    build-environment:
-      - PARTS_PYTHON_INTERPRETER: python3.12
   airflow-license:
     plugin: dump
     source: https://github.com/apache/airflow
@@ -54,10 +50,3 @@ parts:
       LICENSE: licenses/LICENSE-airflow-rock
     stage:
       - licenses/LICENSE-airflow-rock
-  env_stage:
-    plugin: dump
-    source: .
-    organize:
-      environment: etc/profile.d/environment.sh
-    stage:
-      - etc/profile.d/environment.sh
