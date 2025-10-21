@@ -10,7 +10,6 @@ platforms:
   amd64:
 environment:
   AIRFLOW_HOME: /var/lib/airflow
-  PYTHONPATH: /usr/lib/python3
 
 services:
   airflow:
@@ -31,7 +30,7 @@ parts:
     source-type: git
     source-tag: 3.1.0
     stage-packages:
-      - python3.12-venv
+      - python3-venv
   airflow-license:
     plugin: dump
     source: https://github.com/apache/airflow
