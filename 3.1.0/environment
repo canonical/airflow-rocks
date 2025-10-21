@@ -1,0 +1,2 @@
+export AIRFLOW_HOME=/var/lib/airflow
+export PYTHONPATH="/usr/lib/python3:$PYTHONPATH"

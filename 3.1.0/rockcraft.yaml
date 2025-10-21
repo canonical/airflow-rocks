@@ -18,9 +18,7 @@ services:
   airflow:
     override: replace
     startup: enabled
-    command: /usr/bin/airflow standalone
-    environment:
-      AIRFLOW_HOME: /var/lib/airflow
+    command: /bin/bash -lc 'exec /usr/bin/airflow standalone'
 
 checks:
   airflow-running:
@@ -56,3 +54,10 @@ parts:
       LICENSE: licenses/LICENSE-airflow-rock
     stage:
       - licenses/LICENSE-airflow-rock
+  env_stage:
+    plugin: dump
+    source: .
+    organize:
+      environment: etc/profile.d/environment.sh
+    stage:
+      - etc/profile.d/environment.sh
