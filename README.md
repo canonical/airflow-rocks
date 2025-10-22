@@ -1,10 +1,11 @@
-# airflow-rock
+# Airflow Rock
 
-Canonical-packaged rock for Apache Airflow, designed for multi-service charm integration.
+## Monolithic repository for Airflow Rocks.
 
-This repository defines a single, reproducible `.rock` containing all core Airflow components. It is intended to be reused across multiple charms, each orchestrating a specific Airflow service.
+Rocks for Apache Airflow.
 
-## Build Instructions
+This repository hosts all the necessary files to build Rocks for various Airflow components.
 
-```bash
-rockcraft pack
+To interact with this repository, use `just` to run commands.
+
+Please refer to the [DEVELOPING.md](./DEVELOPING.md) guide for details on developing, building, and testing the Airflow Rocks in this repository.
