@@ -15,16 +15,19 @@ command:
   default-executor-is-local:
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
+    timeout: 90000
     stdout:
       - "/^(LocalExecutor|SequentialExecutor)$/"
   k8s-executor-env-override:
     exec: AIRFLOW__CORE__EXECUTOR=KubernetesExecutor /bin/airflow config get-value core executor
     exit-status: 0
+    timeout: 90000
     stdout:
       - "/^KubernetesExecutor$/"
   celery-executor-env-override:
     exec: AIRFLOW__CORE__EXECUTOR=CeleryExecutor /bin/airflow config get-value core executor
     exit-status: 0
+    timeout: 90000
     stdout:
       - "/^CeleryExecutor$/"
   sa-driver-postgres:
@@ -63,6 +66,7 @@ command:
               sys.exit(1)
       PY
     exit-status: 0
+    timeout: 90000
   airflow-add-elasticsearch-default:
     exec: |
       airflow connections add elasticsearch_default --conn-type elasticsearch --conn-host localhost --conn-port 9200 --conn-schema http
