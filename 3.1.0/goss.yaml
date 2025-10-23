@@ -2,6 +2,7 @@ command:
   airflow-version:
     exec: "airflow version"
     exit-status: 0
+    timeout: 90000
     stdout:
         - "/^3\\.1\\./"
   pebble-services:
