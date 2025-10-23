@@ -28,17 +28,19 @@ chmod +rx /usr/local/bin/kgoss
 
 ## Repository Structure
 
+```bash
+.
+├── 3.1.0
+│   ├── goss_wait.yaml
+│   ├── goss.yaml
+│   └── rockcraft.yaml
+├── DEVELOPING.md
+├── justfile
+├── LICENSE
+└── README.md
+```
 
-- **3.1.0/**
-  - `rockcraft.yaml` — Rockcraft build definition for Airflow 3.1.0  
-  - `goss.yaml` — Base health checks  
-  - `goss_wait.yaml` — Startup readiness checks  
-  - `environment` — Version-specific environment variables  
-- `justfile` — Task automation for building, cleaning, and testing  
-- `LICENSE` — Project license file  
-- `README.md` — Project README  
-
-- Each version directory (e.g., `3.1.0/`) contains everything needed to build that Airflow release.
+- Each version directory contains everything needed to build that Airflow release.
 - Currently, this repository supports **Apache Airflow 3.1.0**, the latest stable upstream version.
 
 ---
@@ -52,7 +54,7 @@ cd 3.1.0
 rockcraft pack
 ```
 
-This produces a .rock artifact (e.g., airflow-rock_3.1.0_amd64.rock) in the same directory.
+This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the same directory.
 
 ## Using the Justfile
 
