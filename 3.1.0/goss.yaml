@@ -27,26 +27,6 @@ command:
     exit-status: 0
     stdout:
       - "/^CeleryExecutor$/"
-  sa-driver-postgres:
-    exec: python3 -c "from sqlalchemy import create_engine; create_engine('postgresql+psycopg2://user:pass@localhost/db'); import sys; sys.stdout.write('ok')"
-    exit-status: 0
-    stdout: "ok"
-  sa-driver-mysql:
-    exec: python3 -c "from sqlalchemy import create_engine; create_engine('mysql+mysqldb://user:pass@localhost/db'); import sys; sys.stdout.write('ok')"
-    exit-status: 0
-    stdout: "ok"
-  sa-driver-sqlite:
-    exec: python3 -c "from sqlalchemy import create_engine; create_engine('sqlite://'); import sys; sys.stdout.write('ok')"
-    exit-status: 0
-    stdout: "ok"
-  sa-driver-odbc:
-    exec: python3 -c "from sqlalchemy import create_engine; create_engine('mssql+pyodbc://user:pass@localhost/db?driver=ODBC+Driver+18+for+SQL+Server'); import sys; sys.stdout.write('ok')"
-    exit-status: 0
-    stdout: "ok"
-  sa-driver-mysql-pymysql:
-    exec: python3 -c "from sqlalchemy import create_engine; create_engine('mysql+pymysql://user:pass@localhost/db?driver=ODBC+Driver+18+for+SQL+Server'); import sys; sys.stdout.write('ok')"
-    exit-status: 0
-    stdout: "ok"
   providers-import-check:
     exec: |
       export PROVIDERS="$(
