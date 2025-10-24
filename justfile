@@ -41,7 +41,7 @@ run VERSION: (pack VERSION) (start-local-registry) (push-to-local-registry VERSI
 	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${VERSION}" | jq -r .Digest)"
 	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
 	cd "${VERSION}" && \
-	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
+	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color --max-concurrent=30" GOSS_WAIT_OPTS="-r 480s -s 2s" \
 	kgoss edit -i "${IMAGE_REF}"  
 
 test VERSION: (pack VERSION) (start-local-registry) (push-to-local-registry VERSION) 
@@ -52,5 +52,5 @@ test VERSION: (pack VERSION) (start-local-registry) (push-to-local-registry VERS
 	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${VERSION}" | jq -r .Digest)"
 	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
 	cd "${VERSION}" && \
-	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
+	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color --max-concurrent=30" GOSS_WAIT_OPTS="-r 480s -s 2s" \
 	kgoss run -i "${IMAGE_REF}"
