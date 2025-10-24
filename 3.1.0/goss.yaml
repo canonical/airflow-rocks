@@ -68,6 +68,12 @@ file:
     owner: root
     group: root
     filetype: file
+  /usr/share/rocks/dpkg.query:
+    exists: true
+    mode: "0644"
+    filetype: file
+    owner: root
+    group: root
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
