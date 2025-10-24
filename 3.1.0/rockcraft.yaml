@@ -51,7 +51,8 @@ parts:
       - licenses/LICENSE-airflow-rock
   deb-security-manifest:
     plugin: nil
-    after: [airflow]
+    after: 
+      - airflow
     override-prime: |
       set -x
       mkdir -p $CRAFT_PRIME/usr/share/rocks/
