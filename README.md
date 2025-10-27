@@ -15,7 +15,7 @@ It is intended for maintainers and contributors working on this rock.
 
 ## Overview
 
-This rock builds **Apache Airflow 3.1.0** from source on **Ubuntu 24.04 (Python 3.12)** and packages it as a Pebble-managed OCI container.
+This rock builds **Apache Airflow** from source on **Ubuntu** and packages it as a Pebble-managed OCI container.
 It includes a wide range of official Airflow providers and runs Airflow in standalone mode by default.
 
 **Key features:**
