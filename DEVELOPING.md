@@ -47,12 +47,11 @@ chmod +rx /usr/local/bin/kgoss
 
 ## Building the Rock
 
-To build the Airflow Rock:
+To build the Airflow Rock, go to the directory that corresponds to your desired version. For example:
 
 ```bash
 cd 3.1.0
 rockcraft pack
-```
 
 This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the same directory.
 
