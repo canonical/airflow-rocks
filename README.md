@@ -121,7 +121,7 @@ python-constraints:
   - https://raw.githubusercontent.com/apache/airflow/constraints-3.1.0/constraints-3.12.txt
 ```
 
-This ensures the pinned versions of all dependencies and providers match Airflow 3.1.0.
+This ensures the pinned versions of all dependencies and providers match the desired version of Airflow.
 
 ## Environment variables
 
