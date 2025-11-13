@@ -78,7 +78,6 @@ The run command starts a containerized Airflow instance for local smoke testing 
 - goss.yaml and goss_wait.yaml define validation checks that ensure:
 - Airflow starts and runs as expected within the Rock.
 - All required providers and dependencies are present.
-- Environment variables are correctly staged and loaded.
 
 ### To execute the tests
 ```bash
