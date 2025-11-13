@@ -30,7 +30,7 @@ chmod +rx /usr/local/bin/kgoss
 
 ```bash
 .
-├── 3.1.0
+├── <version>
 │   ├── goss_wait.yaml
 │   ├── goss.yaml
 │   └── rockcraft.yaml
@@ -41,7 +41,6 @@ chmod +rx /usr/local/bin/kgoss
 ```
 
 - Each version directory contains everything needed to build that Airflow release.
-- Currently, this repository supports **Apache Airflow 3.1.0**, the latest stable upstream version.
 
 ---
 
@@ -50,7 +49,7 @@ chmod +rx /usr/local/bin/kgoss
 To build the Airflow Rock, go to the directory that corresponds to your desired version. For example:
 
 ```bash
-cd 3.1.0
+cd <version>
 rockcraft pack
 
 This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the same directory.
