@@ -20,7 +20,7 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 
 **Key features:**
 
-* Builds Airflow directly from the upstream GitHub tag (`3.1.0`).
+* Builds Airflow directly from the upstream GitHub tag (e.g. `3.1.0`).
 * Uses the official constraints file for Python 3.12 to ensure dependency compatibility.
 * Stages common Airflow provider packages.
 * Runs the Airflow webserver and scheduler automatically via Pebble on startup.
