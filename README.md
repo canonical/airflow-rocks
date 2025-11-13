@@ -9,7 +9,7 @@ To interact with this repository, use `just` to run commands.
 ## Developing Apache Airflow Rock
 
 This document further explains how to build, customize, and work with the **Apache Airflow Rock** defined in `rockcraft.yaml`.
-It is intended for maintainers and contributors working on this rock.
+It is intended for people interested in creating their own version of the rock.
 
 ---
 
