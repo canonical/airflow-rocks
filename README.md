@@ -21,9 +21,9 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 **Key features:**
 
 * Builds Airflow directly from the upstream GitHub tag (e.g. `3.1.0`).
-* Uses the official constraints file for Python 3.12 to ensure dependency compatibility.
+* Uses the official constraints file for Python to ensure dependency compatibility.
 * Stages common Airflow provider packages.
-* Runs the Airflow webserver and scheduler automatically via Pebble on startup.
+* Runs Airflow in standalone mode automatically via Pebble upon startup
 * Includes licensing information for both Airflow and this rock.
 
 
@@ -33,8 +33,11 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 airflow-rocks/
 ├─ 3.1.0/
 │  ├─ rockcraft.yaml         # Rockcraft manifest defining the rock
-│  └─ DEVELOPING.md          # (this file)
-├─ environment               # (optional) global env vars if used
+│  ├─ goss.yaml
+│  ├─ goss_wait.yaml
+├─ DEVELOPING.md          
+├─ README.md
+├─ justfile
 ```
 
 ## Building the rock
@@ -42,8 +45,7 @@ airflow-rocks/
 To build the rock:
 
 ```bash
-cd airflow-rocks/3.1.0
-rockcraft pack
+just pack ${version}
 ```
 
 This will:
@@ -88,7 +90,7 @@ services:
 
 This runs Airflow’s built-in standalone mode, which launches:
 
-* A webserver (API-Server)
+* An API-Server
 * A scheduler
 * A metadata database (SQLite, by default)
 
@@ -122,22 +124,6 @@ python-constraints:
 ```
 
 This ensures the pinned versions of all dependencies and providers match the desired version of Airflow.
-
-## Environment variables
-
-The `env_stage` part stages a `/etc/environment` file. This can set global variables like:
-
-```bash
-AIRFLOW_HOME=/var/lib/airflow
-PYTHONPATH="/usr/lib/python3:$PYTHONPATH"
-```
-
-However, Airflow has sensible defaults, so this part is **optional**.
-If you do not include it, Airflow will default to:
-
-* `AIRFLOW_HOME=$HOME/airflow` (e.g., `/root/airflow`)
-* Standard Python search paths
-
 
 ## Provider packages
 
