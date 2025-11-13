@@ -145,7 +145,7 @@ airflow providers list
 Two license files are included in the rock image:
 
 * `licenses/LICENSE-airflow` – Apache 2.0 license for upstream Airflow
-* `licenses/LICENSE-airflow-rock` – License for this rock’s source
+* `licenses/LICENSE-airflow-rock` – Apache 2.0 license for this rock’s source
 
 
 ## Development tips
