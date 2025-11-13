@@ -38,6 +38,7 @@ airflow-rocks/
 ├─ DEVELOPING.md          
 ├─ README.md
 ├─ justfile
+├─ LICENSE
 ```
 
 ## Building the rock
@@ -112,7 +113,6 @@ The rock is built from several parts:
 | **airflow**                | Builds Apache Airflow from source and installs providers                |
 | **airflow-license**        | Includes upstream Apache Airflow LICENSE                                |
 | **airflow-rock-license**   | Includes the LICENSE for this rock                                      |
-| **env_stage** *(optional)* | Stages a system-wide `/etc/environment` file with environment variables |
 
 ### Python constraints
 
