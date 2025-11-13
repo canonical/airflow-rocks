@@ -20,7 +20,7 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 
 **Key features:**
 
-* Builds Airflow directly from the upstream GitHub tag (e.g. `3.1.0`).
+* Builds Airflow directly from the upstream GitHub tag (e.g. `<version>`).
 * Uses the official constraints file for Python to ensure dependency compatibility.
 * Stages common Airflow provider packages.
 * Runs Airflow in standalone mode automatically via Pebble upon startup
@@ -31,7 +31,7 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 
 ```
 airflow-rocks/
-├─ 3.1.0/
+├─ <version>/
 │  ├─ rockcraft.yaml         # Rockcraft manifest defining the rock
 │  ├─ goss.yaml
 │  ├─ goss_wait.yaml
@@ -51,9 +51,9 @@ just pack ${version}
 
 This will:
 
-* Fetch Airflow source from GitHub (`3.1.0` tag)
+* Fetch Airflow source from GitHub (`<version>` tag)
 * Build Airflow and providers into a Python environment
-* Package it as an OCI image wrapped in a `.rock` file (e.g., `airflow-rock_3.1.0_amd64.rock`)
+* Package it as an OCI image wrapped in a `.rock` file (e.g., `airflow-rock_<version>_amd64.rock`)
 
 ## Running and testing the rock
 
@@ -63,9 +63,9 @@ Once built, you can run the rock locally using `docker`:
 
 ```bash
 # Load the rock into your local Docker daemon
-rockcraft.skopeo --insecure-policy copy oci-archive:airflow-rock_3.1.0_amd64.rock docker-daemon:airflow-rock:3.1.0
+rockcraft.skopeo --insecure-policy copy oci-archive:airflow-rock_<version>_amd64.rock docker-daemon:airflow-rock:<version>
 # Run the rock
-docker run -it --rm -p 5000:5000 airflow-rock:3.1.0
+docker run -it --rm -p 5000:5000 airflow-rock:<version>
 ```
 
 The container will start Airflow in standalone mode.
@@ -120,7 +120,7 @@ The build uses Airflow’s official constraints file for a certain version of Py
 
 ```yaml
 python-constraints:
-  - https://raw.githubusercontent.com/apache/airflow/constraints-3.1.0/constraints-3.12.txt
+  - https://raw.githubusercontent.com/apache/airflow/constraints-<version>/constraints-3.12.txt
 ```
 
 This ensures the pinned versions of all dependencies and providers match the desired version of Airflow.
