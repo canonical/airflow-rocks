@@ -114,7 +114,7 @@ The rock is built from several parts:
 
 ### Python constraints
 
-The build uses Airflow’s official constraints file for Python 3.12:
+The build uses Airflow’s official constraints file for a certain version of Python, for example:
 
 ```yaml
 python-constraints:
