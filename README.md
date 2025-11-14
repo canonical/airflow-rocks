@@ -1,10 +1,157 @@
-# airflow-rock
+# Airflow Rock
 
-Canonical-packaged rock for Apache Airflow, designed for multi-service charm integration.
+## Monolithic repository for Airflow Rocks.
 
-This repository defines a single, reproducible `.rock` containing all core Airflow components. It is intended to be reused across multiple charms, each orchestrating a specific Airflow service.
+Rocks for Apache Airflow.
+This repository hosts all the necessary files to build Rocks for various Airflow components.
+To interact with this repository, use `just` to run commands.
 
-## Build Instructions
+## Developing Apache Airflow Rock
+
+This document further explains how to build, customize, and work with the **Apache Airflow Rock** defined in `rockcraft.yaml`.
+It is intended for people interested in creating their own version of the rock.
+
+---
+
+## Overview
+
+This rock builds **Apache Airflow** from source on **Ubuntu** and packages it as a Pebble-managed OCI container.
+It includes a wide range of official Airflow providers and runs Airflow in standalone mode by default.
+
+**Key features:**
+
+* Builds Airflow directly from the upstream GitHub tag (e.g. `<version>`).
+* Uses the official constraints file for Python to ensure dependency compatibility.
+* Stages common Airflow provider packages.
+* Runs Airflow in standalone mode automatically via Pebble upon startup
+* Includes licensing information for both Airflow and this rock.
+
+
+## Project Structure
+
+```
+airflow-rocks/
+├─ <version>/
+│  ├─ rockcraft.yaml         # Rockcraft manifest defining the rock
+│  ├─ goss.yaml
+│  ├─ goss_wait.yaml
+├─ DEVELOPING.md          
+├─ README.md
+├─ justfile
+├─ LICENSE
+```
+
+## Building the rock
+
+To build the rock:
 
 ```bash
-rockcraft pack
+just pack ${version}
+```
+
+This will:
+
+* Fetch Airflow source from GitHub (`<version>` tag)
+* Build Airflow and providers into a Python environment
+* Package it as an OCI image wrapped in a `.rock` file (e.g., `airflow-rock_<version>_amd64.rock`)
+
+## Running and testing the rock
+
+Once built, you can run the rock locally using `docker`:
+
+### Using Docker
+
+```bash
+# Load the rock into your local Docker daemon
+rockcraft.skopeo --insecure-policy copy oci-archive:airflow-rock_<version>_amd64.rock docker-daemon:airflow-rock:<version>
+# Run the rock
+docker run -it --rm -p 5000:5000 airflow-rock:<version>
+```
+
+The container will start Airflow in standalone mode.
+The Airflow web UI will be available at: http://localhost:5000
+
+### Using Pebble inside the container
+
+```bash
+docker exec -it <container_id> pebble services
+docker exec -it <container_id> pebble logs
+```
+
+## Rock services and checks
+
+The rock defines one service, managed by Pebble:
+
+```yaml
+services:
+  airflow:
+    startup: enabled
+    command: /usr/bin/airflow standalone
+```
+
+This runs Airflow’s built-in standalone mode, which launches:
+
+* An API-Server
+* A scheduler
+* A metadata database (SQLite, by default)
+
+A simple liveness check verifies Airflow is running:
+
+```yaml
+checks:
+  airflow-running:
+    exec:
+      command: pgrep airflow
+```
+
+## Parts Explained
+
+The rock is built from several parts:
+
+| Part                       | Purpose                                                                 |
+| -------------------------- | ----------------------------------------------------------------------- |
+| **airflow**                | Builds Apache Airflow from source and installs providers                |
+| **airflow-license**        | Includes upstream Apache Airflow LICENSE                                |
+| **airflow-rock-license**   | Includes the LICENSE for this rock                                      |
+
+### Python constraints
+
+The build uses Airflow’s official constraints file for a certain version of Python, for example:
+
+```yaml
+python-constraints:
+  - https://raw.githubusercontent.com/apache/airflow/constraints-<version>/constraints-3.12.txt
+```
+
+This ensures the pinned versions of all dependencies and providers match the desired version of Airflow.
+
+## Provider packages
+
+The rock installs a comprehensive list of Airflow providers, including:
+
+* Amazon (`apache-airflow-providers-amazon`)
+* Google (`apache-airflow-providers-google`)
+* Kubernetes (`apache-airflow-providers-cncf-kubernetes`)
+* PostgreSQL, MySQL, ODBC, Redis, etc.
+
+To customize providers, edit the `python-packages` list in the `airflow` part.
+### List providers installed
+```bash
+airflow providers list
+```
+
+## Licensing
+
+Two license files are included in the rock image:
+
+* `licenses/LICENSE-airflow` – Apache 2.0 license for upstream Airflow
+* `licenses/LICENSE-airflow-rock` – Apache 2.0 license for this rock’s source
+
+
+## Development tips
+
+* Use `rockcraft pack --verbosity debug` for more detailed logs during builds.
+* Use `rockcraft clean` if builds fail due to stale state.
+* If you change the Python version, update the constraints URL accordingly.
+
+Please refer to the [DEVELOPING.md](./DEVELOPING.md) guide for details on developing, building, and testing the Airflow Rocks in this repository.
