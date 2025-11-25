@@ -103,23 +103,23 @@ file:
     owner: root
     group: root
     mode: "0755"
-  /var/lib/airflow:
+  /opt/airflow:
     exists: true
-    path: /var/lib/airflow
+    path: /opt/airflow
     filetype: directory
     owner: root
     group: root
     mode: "0755"
-  /var/lib/airflow/airflow.cfg:
+  /opt/airflow/airflow.cfg:
     exists: true
-    path: /var/lib/airflow/airflow.cfg
+    path: /opt/airflow/airflow.cfg
     owner: root
     group: root
     filetype: file
     mode: "0600"
-  /var/lib/airflow/logs:
+  /opt/airflow/logs:
     exists: true
-    path: /var/lib/airflow/logs
+    path: /opt/airflow/logs
     filetype: directory
     owner: root
     group: root
