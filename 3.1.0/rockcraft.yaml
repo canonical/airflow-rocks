@@ -9,7 +9,7 @@ build-base: ubuntu@24.04
 platforms:
   amd64:
 environment:
-  AIRFLOW_HOME: /var/lib/airflow
+  AIRFLOW_HOME: /opt/airflow
 
 services:
   airflow:
