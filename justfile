@@ -20,7 +20,7 @@ push-to-local-registry VERSION:
 	set -euxo pipefail
 
 	rockcraft.skopeo --insecure-policy copy --dest-tls-verify=false \
-	  "oci-archive:${VERSION}/airflow-rock_${VERSION}_amd64.rock" \
+	  "oci-archive:${VERSION}/airflow_${VERSION}_amd64.rock" \
 	  "docker://localhost:5000/airflow-rock-dev:${VERSION}"
 
 pack VERSION DEBUG="":
