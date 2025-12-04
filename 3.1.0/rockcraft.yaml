@@ -1,4 +1,4 @@
-name: airflow-rock
+name: airflow
 version: "3.1.0"
 summary: Apache Airflow Rock
 description: |
