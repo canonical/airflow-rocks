@@ -5,7 +5,6 @@ description: |
   Builds Apache Airflow 3.1.0 from source on Ubuntu 24.04 (Python 3.12).
 
 base: ubuntu@24.04
-build-base: ubuntu@24.04
 platforms:
   amd64:
 environment:
@@ -91,11 +90,9 @@ parts:
     stage:
       - licenses/LICENSE-airflow-rock
   deb-security-manifest:
-    plugin: nil
-    after: 
-      - airflow
-    override-prime: |
-      set -x
-      mkdir -p $CRAFT_PRIME/usr/share/rocks/
-      (echo "# os-release" && cat /etc/os-release && echo "# dpkg-query" && dpkg-query --admindir=$CRAFT_PRIME/var/lib/dpkg/ -f '${db:Status-Abbrev},${binary:Package},${Version},${source:Package},${Source:Version}\n' -W) > $CRAFT_PRIME/usr/share/rocks/dpkg.query
+    plugin: make
+    source: https://github.com/canonical/rocks-security-manifest
+    source-type: git
+    source-branch: main
+    override-prime: gen_manifest
 
