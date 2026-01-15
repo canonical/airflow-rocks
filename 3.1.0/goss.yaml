@@ -144,6 +144,27 @@ file:
     filetype: file
     owner: root
     group: root
+  /opt/airflow/rock-signature:
+    exists: true
+    mode: "0644"
+    filetype: file
+    owner: root
+    group: root
+    contains:
+      - '"version"'
+      - '"md5"'
+      - '"build_timestamp"'
+
+command:
+  rock-signature-valid-json:
+    exec: "python3 -m json.tool /opt/airflow/rock-signature > /dev/null"
+    exit-status: 0
+  rock-signature-version-match:
+    exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); assert sig['version'] == '3.1.0'\""
+    exit-status: 0
+  rock-signature-has-valid-md5:
+    exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); assert len(sig['md5']) == 32\""
+    exit-status: 0
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
