@@ -95,4 +95,27 @@ parts:
     source-type: git
     source-branch: main
     override-prime: gen_manifest
+  airflow-signature:
+    plugin: nil
+    after:
+      - airflow
+    override-stage: |
+      AIRFLOW_VERSION="${CRAFT_PROJECT_VERSION}"
+
+      AIRFLOW_MD5=$(find ${CRAFT_STAGE}/lib/python3.12/site-packages \
+        \( -name "airflow" -o -name "apache_airflow*" \) \
+        -type d -exec find {} -type f \; 2>/dev/null \
+        | sort | xargs md5sum 2>/dev/null | md5sum | cut -d' ' -f1)
+
+      BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+      mkdir -p ${CRAFT_PART_INSTALL}/opt/airflow
+
+      python3 -c "import json; print(json.dumps({'version': '${AIRFLOW_VERSION}', 'md5': '${AIRFLOW_MD5}', 'build_timestamp': '${BUILD_TIMESTAMP}'}, indent=2))" > ${CRAFT_PART_INSTALL}/opt/airflow/rock-signature
+
+      chmod 0644 ${CRAFT_PART_INSTALL}/opt/airflow/rock-signature
+
+      craftctl default
+    stage:
+      - opt/airflow/rock-signature
 

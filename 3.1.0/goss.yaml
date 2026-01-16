@@ -87,6 +87,15 @@ command:
       - "apache-airflow-providers-standard | 1.8.0"
       - "apache-airflow-providers-trino | 6.3.3"
       - "apache-airflow-providers-vertica | 4.1.2"
+  rock-signature-valid-json:
+    exec: "python3 -m json.tool /opt/airflow/rock-signature || echo 'Invalid JSON in rock-signature'"
+    exit-status: 0
+  rock-signature-version-match:
+    exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); v=sig['version']; assert v == '3.1.0', f'Version mismatch: {v}'\""
+    exit-status: 0
+  rock-signature-has-valid-md5:
+    exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); m=sig['md5']; assert len(m) == 32, f'Invalid MD5 length: {len(m)}'\""
+    exit-status: 0
 
 file:
   /bin/airflow:
@@ -144,6 +153,16 @@ file:
     filetype: file
     owner: root
     group: root
+  /opt/airflow/rock-signature:
+    exists: true
+    mode: "0644"
+    filetype: file
+    owner: root
+    group: root
+    contains:
+      - '"version"'
+      - '"md5"'
+      - '"build_timestamp"'
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
