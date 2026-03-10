@@ -12,6 +12,11 @@ command:
     exit-status: 0
     stdout:
       - '1'
+  airflow-standalone-user:
+    exec: "sh -lc \"ps -eo user,cmd | grep -F 'airflow standalone' | grep -v grep | awk 'NR==1{print $1}'\""
+    exit-status: 0
+    stdout:
+      - 'ubuntu'
   default-executor-is-local:
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
@@ -96,6 +101,15 @@ command:
   rock-signature-has-valid-md5:
     exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); m=sig['md5']; assert len(m) == 32, f'Invalid MD5 length: {len(m)}'\""
     exit-status: 0
+  airflow-home-owned-by-1000:
+    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow) = 1000:1000 ]\""
+    exit-status: 0
+  airflow-logs-owned-by-1000:
+    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow/logs) = 1000:1000 ]\""
+    exit-status: 0
+  airflow-signature-owned-by-1000:
+    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow/rock-signature) = 1000:1000 ]\""
+    exit-status: 0
 
 file:
   /bin/airflow:
@@ -116,22 +130,22 @@ file:
     exists: true
     path: /opt/airflow
     filetype: directory
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: "0755"
   /opt/airflow/airflow.cfg:
     exists: true
     path: /opt/airflow/airflow.cfg
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     filetype: file
     mode: "0600"
   /opt/airflow/logs:
     exists: true
     path: /opt/airflow/logs
     filetype: directory
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: "0755"
   /licenses/LICENSE-airflow:
     exists: true
@@ -157,12 +171,21 @@ file:
     exists: true
     mode: "0644"
     filetype: file
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     contains:
       - '"version"'
       - '"md5"'
       - '"build_timestamp"'
+
+user:
+  root:
+    exists: true
+    uid: 0
+    gid: 0
+  ubuntu:
+    exists: true
+    home: /opt/airflow
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
