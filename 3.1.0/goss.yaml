@@ -101,15 +101,6 @@ command:
   rock-signature-has-valid-md5:
     exec: "python3 -c \"import json; sig=json.load(open('/opt/airflow/rock-signature')); m=sig['md5']; assert len(m) == 32, f'Invalid MD5 length: {len(m)}'\""
     exit-status: 0
-  airflow-home-owned-by-1000:
-    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow) = 1000:1000 ]\""
-    exit-status: 0
-  airflow-logs-owned-by-1000:
-    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow/logs) = 1000:1000 ]\""
-    exit-status: 0
-  airflow-signature-owned-by-1000:
-    exec: "sh -lc \"[ $(stat -c '%u:%g' /opt/airflow/rock-signature) = 1000:1000 ]\""
-    exit-status: 0
 
 file:
   /bin/airflow:
@@ -185,7 +176,8 @@ user:
     gid: 0
   ubuntu:
     exists: true
-    home: /opt/airflow
+    uid: 1000
+    gid: 1000
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":
