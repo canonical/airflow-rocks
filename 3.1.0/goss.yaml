@@ -33,6 +33,7 @@ command:
     stdout:
       - "/^CeleryExecutor$/"
   providers-import-check:
+    timeout: 60000
     exec: |
       export PROVIDERS="$(
       airflow providers list --output plain \
