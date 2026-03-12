@@ -13,7 +13,7 @@ command:
     stdout:
       - '1'
   airflow-standalone-user:
-    exec: "sh -lc \"ps -eo user,cmd | grep -F 'airflow standalone' | grep -v grep | awk 'NR==1{print $1}'\""
+    exec: "sh -lc \"ps -o user= $(pgrep -f 'airflow standalone') | head -n 1\""
     exit-status: 0
     stdout:
       - 'ubuntu'
