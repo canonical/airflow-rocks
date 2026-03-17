@@ -12,6 +12,11 @@ command:
     exit-status: 0
     stdout:
       - '1'
+  airflow-standalone-user:
+    exec: "sh -lc \"ps -o user= $(pgrep -f 'airflow standalone') | head -n 1\""
+    exit-status: 0
+    stdout:
+      - 'ubuntu'
   default-executor-is-local:
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
@@ -28,6 +33,7 @@ command:
     stdout:
       - "/^CeleryExecutor$/"
   providers-import-check:
+    timeout: 60000
     exec: |
       export PROVIDERS="$(
       airflow providers list --output plain \
@@ -116,22 +122,22 @@ file:
     exists: true
     path: /opt/airflow
     filetype: directory
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: "0755"
   /opt/airflow/airflow.cfg:
     exists: true
     path: /opt/airflow/airflow.cfg
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     filetype: file
     mode: "0600"
   /opt/airflow/logs:
     exists: true
     path: /opt/airflow/logs
     filetype: directory
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     mode: "0755"
   /licenses/LICENSE-airflow:
     exists: true
@@ -157,12 +163,22 @@ file:
     exists: true
     mode: "0644"
     filetype: file
-    owner: root
-    group: root
+    owner: ubuntu
+    group: ubuntu
     contains:
       - '"version"'
       - '"md5"'
       - '"build_timestamp"'
+
+user:
+  root:
+    exists: true
+    uid: 0
+    gid: 0
+  ubuntu:
+    exists: true
+    uid: 1000
+    gid: 1000
 
 http:
   "http://127.0.0.1:8080/api/v2/monitor/health":

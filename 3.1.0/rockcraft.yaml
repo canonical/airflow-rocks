@@ -15,6 +15,8 @@ services:
     override: replace
     startup: enabled
     command: /usr/bin/airflow standalone
+    user: ubuntu
+    group: ubuntu
 
 checks:
   airflow-running:
@@ -118,4 +120,12 @@ parts:
       craftctl default
     stage:
       - opt/airflow/rock-signature
+  airflow-permissions:
+    plugin: nil
+    after:
+      - airflow-signature
+    override-prime: |
+      set -e
+      mkdir -p ${CRAFT_PRIME}/opt/airflow/logs
+      chown -R 1000:1000 ${CRAFT_PRIME}/opt/airflow
 
