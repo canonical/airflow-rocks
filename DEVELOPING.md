@@ -30,7 +30,7 @@ chmod +rx /usr/local/bin/kgoss
 
 ```bash
 .
-├── <version>
+├── <major.minor>
 │   ├── goss_wait.yaml
 │   ├── goss.yaml
 │   └── rockcraft.yaml
@@ -49,7 +49,7 @@ chmod +rx /usr/local/bin/kgoss
 To build the Airflow Rock, go to the directory that corresponds to your desired version. For example:
 
 ```bash
-cd <version>
+cd <major.minor>
 rockcraft pack
 
 This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the same directory.
@@ -58,16 +58,16 @@ This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the 
 
 The justfile provides shortcuts for common developer actions.
 
-`just pack <version>`	Build the .rock for the current version
-`just clean <version>`	Remove build artifacts and reset workspace
-`just test <version>`	Run validation and health checks (goss tests)
-`just run <version>`	Launch a test pod to inspect and interact with the built image
+`just pack <major.minor>`	Build the .rock for the current version
+`just clean <major.minor>`	Remove build artifacts and reset workspace
+`just test <major.minor>`	Run validation and health checks (goss tests)
+`just run <major.minor>`	Launch a test pod to inspect and interact with the built image
 
 ### Example usage
 
 ```bash
-just pack <version>
-just run <version>
+just pack <major.minor>
+just run <major.minor>
 ```
 
 The run command starts a containerized Airflow instance for local smoke testing and validation.
@@ -80,7 +80,7 @@ The run command starts a containerized Airflow instance for local smoke testing 
 
 ### To execute the tests
 ```bash
-just test <version>
+just test <major.minor>
 ```
 
 ## Versioning

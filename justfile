@@ -19,19 +19,19 @@ push-to-local-registry VERSION:
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	version_directory="${VERSION%.*}"
+	rock_version="$(cat $VERSION/rockcraft.yaml | yq '.version')"
 
 	rockcraft.skopeo --insecure-policy copy --dest-tls-verify=false \
-	  "oci-archive:${version_directory}/airflow_${VERSION}_amd64.rock" \
-	  "docker://localhost:5000/airflow-rock-dev:${VERSION}"
+	  "oci-archive:${VERSION}/airflow_${rock_version}_amd64.rock" \
+	  "docker://localhost:5000/airflow-rock-dev:${rock_version}"
 
 pack VERSION DEBUG="":
 	#!/usr/bin/env bash
 	set -euxo pipefail
 
-	version_directory="${VERSION%.*}"
+	rock_version="$(cat $VERSION/rockcraft.yaml | yq '.version')"
 
-	cd "${version_directory}" && rockcraft pack ${DEBUG}
+	cd "${VERSION}" && rockcraft pack ${DEBUG}
 
 clean VERSION:
 	cd "${VERSION}" && rockcraft clean
@@ -42,11 +42,11 @@ run VERSION: (pack VERSION) (start-local-registry) (push-to-local-registry VERSI
 	set -euxo pipefail
 	trap 'just stop-local-registry' EXIT
 
-	version_directory="${VERSION%.*}"
+	rock_version="$(cat $VERSION/rockcraft.yaml | yq '.version')"
 
-	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${VERSION}" | jq -r .Digest)"
+	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${rock_version}" | jq -r .Digest)"
 	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
-	cd "${version_directory}" && \
+	cd "${VERSION}" && \
 	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
 	kgoss edit -i "${IMAGE_REF}"
 
@@ -55,10 +55,10 @@ test VERSION: (pack VERSION) (start-local-registry) (push-to-local-registry VERS
 	set -euxo pipefail
 	trap 'just stop-local-registry' EXIT
 
-	version_directory="${VERSION%.*}"
+	rock_version="$(cat $VERSION/rockcraft.yaml | yq '.version')"
 
-	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${VERSION}" | jq -r .Digest)"
+	DIGEST="$(rockcraft.skopeo --insecure-policy inspect --tls-verify=false "docker://localhost:5000/airflow-rock-dev:${rock_version}" | jq -r .Digest)"
 	IMAGE_REF="localhost:5000/airflow-rock-dev@${DIGEST}"
-	cd "${version_directory}" && \
+	cd "${VERSION}" && \
 	env GOSS_KUBECTL_BIN="$(which kubectl)" GOSS_OPTS="--color" GOSS_WAIT_OPTS="-r 480s -s 2s" \
 	kgoss run -i "${IMAGE_REF}"
