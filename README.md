@@ -31,11 +31,11 @@ It includes a wide range of official Airflow providers and runs Airflow in stand
 
 ```
 airflow-rocks/
-├─ <version>/
+├─ <major.minor>/
 │  ├─ rockcraft.yaml         # Rockcraft manifest defining the rock
 │  ├─ goss.yaml
 │  ├─ goss_wait.yaml
-├─ DEVELOPING.md          
+├─ DEVELOPING.md
 ├─ README.md
 ├─ justfile
 ├─ LICENSE
@@ -46,7 +46,7 @@ airflow-rocks/
 To build the rock:
 
 ```bash
-just pack ${version}
+just pack <major.minor>
 ```
 
 This will:
