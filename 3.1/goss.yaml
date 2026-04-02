@@ -171,6 +171,12 @@ file:
       - '"version"'
       - '"md5"'
       - '"build_timestamp"'
+  /usr/bin/git:
+    exists: true
+    mode: "0755"
+    filetype: file
+    owner: root
+    group: root
 
 user:
   root:
