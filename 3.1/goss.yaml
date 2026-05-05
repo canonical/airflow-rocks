@@ -50,6 +50,12 @@ command:
               sys.exit(1)
       PY
     exit-status: 0
+  airflow-git-provider-dependencies:
+    exec: pip freeze
+    exit-status: 0
+    stdout:
+      - "GitPython==3.1.46"
+      - "aiohttp==3.13.3"
   airflow-providers-list:
     exec: airflow providers list --output plain   | grep -v 'package_name'   | awk '/^apache-/{name=$1; version=$NF; print name" | "version}'
     exit-status: 0
