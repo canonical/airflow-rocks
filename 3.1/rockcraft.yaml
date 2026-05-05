@@ -73,6 +73,8 @@ parts:
       - apache-airflow-providers-slack
       - apache-airflow-providers-smtp
       - apache-airflow-providers-sftp
+      - GitPython # required by apache-airflow-providers-git
+      - aiohttp # required by apache-airflow-providers-git
   airflow-license:
     plugin: dump
     source: https://github.com/apache/airflow
