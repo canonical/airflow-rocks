@@ -12,4 +12,4 @@ on:
 jobs:
   pull-request:
     name: PR
-    uses: lczyk/observability/.github/workflows/rock-pull-request.yaml@add-arm64-support
+    uses: canonical/observability/.github/workflows/rock-pull-request.yaml@v2
