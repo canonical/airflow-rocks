@@ -20,9 +20,10 @@ push-to-local-registry VERSION:
 	set -euxo pipefail
 
 	rock_version="$(cat $VERSION/rockcraft.yaml | yq '.version')"
+	arch="$(dpkg --print-architecture)"
 
 	rockcraft.skopeo --insecure-policy copy --dest-tls-verify=false \
-	  "oci-archive:${VERSION}/airflow_${rock_version}_amd64.rock" \
+	  "oci-archive:${VERSION}/airflow_${rock_version}_${arch}.rock" \
 	  "docker://localhost:5000/airflow-rock-dev:${rock_version}"
 
 pack VERSION DEBUG="":
