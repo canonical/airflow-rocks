@@ -53,7 +53,7 @@ This will:
 
 * Fetch Airflow source from GitHub (`<version>` tag)
 * Build Airflow and providers into a Python environment
-* Package it as an OCI image wrapped in a `.rock` file (e.g., `airflow-rock_<version>_amd64.rock`)
+* Package it as an OCI image wrapped in a `.rock` file (e.g., `airflow_<version>_<arch>.rock`)
 
 ## Running and testing the rock
 
@@ -63,7 +63,7 @@ Once built, you can run the rock locally using `docker`:
 
 ```bash
 # Load the rock into your local Docker daemon
-rockcraft.skopeo --insecure-policy copy oci-archive:airflow-rock_<version>_amd64.rock docker-daemon:airflow-rock:<version>
+rockcraft.skopeo --insecure-policy copy oci-archive:airflow_<version>_<arch>.rock docker-daemon:airflow-rock:<version>
 # Run the rock
 docker run -it --rm -p 5000:5000 airflow-rock:<version>
 ```
