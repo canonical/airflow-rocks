@@ -19,7 +19,7 @@ The following are dependencies to be able to develop and test changes to the Tem
 There are convenient snaps for all of the above dependencies besides goss and kgoss. The recommended way to install these until a goss snap is released would be:
 ```bash
 goss_base_url="https://github.com/goss-org/goss/releases/latest/download"
-curl -L ${goss_base_url}/goss-linux-amd64 -o /usr/local/bin/goss
+curl -L ${goss_base_url}/goss-linux-$(dpkg --print-architecture) -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
 curl -L ${goss_base_url}/kgoss -o /usr/local/bin/kgoss
 chmod +rx /usr/local/bin/kgoss
@@ -52,7 +52,7 @@ To build the Airflow Rock, go to the directory that corresponds to your desired 
 cd <major.minor>
 rockcraft pack
 
-This produces a .rock artifact (e.g., airflow-rock_<version>_amd64.rock) in the same directory.
+This produces a .rock artifact (e.g., airflow_<version>_<arch>.rock) in the same directory.
 
 ## Using the Justfile
 
