@@ -1,5 +1,6 @@
 command:
   airflow-version:
+    timeout: 60000
     exec: "airflow version"
     exit-status: 0
     stdout:
@@ -18,16 +19,19 @@ command:
     stdout:
       - 'ubuntu'
   default-executor-is-local:
+    timeout: 60000
     exec: "/bin/airflow config get-value core executor"
     exit-status: 0
     stdout:
       - "/^(LocalExecutor|SequentialExecutor)$/"
   k8s-executor-env-override:
+    timeout: 60000
     exec: AIRFLOW__CORE__EXECUTOR=KubernetesExecutor /bin/airflow config get-value core executor
     exit-status: 0
     stdout:
       - "/^KubernetesExecutor$/"
   celery-executor-env-override:
+    timeout: 60000
     exec: AIRFLOW__CORE__EXECUTOR=CeleryExecutor /bin/airflow config get-value core executor
     exit-status: 0
     stdout:
@@ -51,12 +55,14 @@ command:
       PY
     exit-status: 0
   airflow-git-provider-dependencies:
+    timeout: 60000
     exec: pip freeze
     exit-status: 0
     stdout:
       - "GitPython==3.1.46"
       - "aiohttp==3.13.3"
   airflow-providers-list:
+    timeout: 60000
     exec: airflow providers list --output plain   | grep -v 'package_name'   | awk '/^apache-/{name=$1; version=$NF; print name" | "version}'
     exit-status: 0
     stdout:
